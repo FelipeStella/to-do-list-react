@@ -1,0 +1,4 @@
+src/gen
+.gitignore
+components.d.ts
+.json

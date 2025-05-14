@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+.retro-header {
+  font-family: 'Press Start 2P', cursive;
+  background: linear-gradient(90deg, #ff0099, #6600ff);
+  color: #fff;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 0 #000;
+}
+
+.retro-header::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  animation: flicker 0.2s infinite;
+  z-index: 0;
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 1;
+}
+
+.title h1 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.icon {
+  font-size: 1.5rem;
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  z-index: 1;
+}
+
+.menu a,
+.new-task {
+  color: #00ffcc;
+  background: none;
+  border: none;
+  font-size: 0.75rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s;
+  font-family: inherit;
+}
+
+.menu a:hover,
+.new-task:hover {
+  color: #ffff00;
+}
+
+.new-task {
+  padding: 0.25rem 0.5rem;
+  border: 2px solid #00ffcc;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.new-task:hover {
+  border-color: #ffff00;
+}
