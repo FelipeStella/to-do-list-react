@@ -5,8 +5,9 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/system";
+import { useNavigate } from "react-router-dom";
 
-const clickSound = new Audio("/assets/sounds/click-8bit.wav");
+const clickSound = new Audio("/src/assets/sounds/click-8bit.wav");
 
 const RetroAppBar = styled(AppBar)({
   fontFamily: "'Press Start 2P', cursive",
@@ -54,9 +55,16 @@ const RetroButton = styled(Button)({
 });
 
 const RetroHeader: React.FC = () => {
+  const navigate = useNavigate();
+
   const playSound = () => {
     clickSound.currentTime = 0;
     clickSound.play();
+  };
+
+  const handleButtonClick = () => {
+    clickSound.play();
+    navigate("/home");
   };
 
   return (
@@ -70,7 +78,7 @@ const RetroHeader: React.FC = () => {
         </Box>
         <Box display="flex" alignItems="center" gap={2}>
           <Button
-            onClick={playSound}
+            onClick={handleButtonClick}
             sx={{
               color: "#00ffcc",
               fontSize: "10px",
