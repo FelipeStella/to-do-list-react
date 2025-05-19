@@ -26,5 +26,14 @@ export default [
       </React.Suspense>
     ),
     meta: { auth: false, name: "Index" }
+  },
+  {
+    path: "/to-do-list",
+    element: (
+      <React.Suspense fallback={<div>Loading...</div>}>
+        {React.createElement(PageComponents.To_do_list)}
+      </React.Suspense>
+    ),
+    meta: { auth: false, name: "To_do_list" }
   }
 ];

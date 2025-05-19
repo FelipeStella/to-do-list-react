@@ -62,9 +62,9 @@ const RetroHeader: React.FC = () => {
     clickSound.play();
   };
 
-  const handleButtonClick = () => {
+  const handleButtonClick = (route: string) => {
     clickSound.play();
-    navigate("/home");
+    navigate(route);
   };
 
   return (
@@ -78,7 +78,7 @@ const RetroHeader: React.FC = () => {
         </Box>
         <Box display="flex" alignItems="center" gap={2}>
           <Button
-            onClick={handleButtonClick}
+            onClick={() => handleButtonClick("/home")}
             sx={{
               color: "#00ffcc",
               fontSize: "10px",
@@ -88,7 +88,7 @@ const RetroHeader: React.FC = () => {
             Início
           </Button>
           <Button
-            onClick={playSound}
+            onClick={() => handleButtonClick("/to-do-list")}
             sx={{
               color: "#00ffcc",
               fontSize: "10px",
