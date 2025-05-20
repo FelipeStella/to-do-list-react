@@ -10,15 +10,6 @@ import PageComponents from "src/page-components";
 
 export default [
   {
-    path: "/home",
-    element: (
-      <React.Suspense fallback={<div>Loading...</div>}>
-        {React.createElement(PageComponents.Home)}
-      </React.Suspense>
-    ),
-    meta: { auth: false, name: "Home" }
-  },
-  {
     path: "/",
     element: (
       <React.Suspense fallback={<div>Loading...</div>}>

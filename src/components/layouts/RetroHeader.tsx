@@ -78,14 +78,14 @@ const RetroHeader: React.FC = () => {
         </Box>
         <Box display="flex" alignItems="center" gap={2}>
           <Button
-            onClick={() => handleButtonClick("/home")}
+            onClick={() => handleButtonClick("/")}
             sx={{
               color: "#00ffcc",
               fontSize: "10px",
               fontFamily: "'Press Start 2P', cursive",
               "&:hover": { color: "#ffff00" },
             }}>
-            Início
+            Board
           </Button>
           <Button
             onClick={() => handleButtonClick("/to-do-list")}
