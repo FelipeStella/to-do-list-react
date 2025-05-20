@@ -1,7 +1,13 @@
 // @page /
-import React from "react";
+import React, { useState } from "react";
 import { Box, Typography, Paper } from "@mui/material";
 import { styled } from "@mui/system";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from "@hello-pangea/dnd";
 
 const BoardContainer = styled(Box)({
   fontFamily: "'Press Start 2P', cursive",
@@ -53,7 +59,8 @@ const TaskCard = styled(Box)({
   boxShadow: "0 0 5px #00ffcc",
 });
 
-const tasks = {
+// Estado inicial das tarefas
+const initialTasks = {
   todo: [
     "Implementar autenticação",
     "Criar layout do board",
@@ -64,6 +71,44 @@ const tasks = {
 };
 
 const BoardPage: React.FC = () => {
+  const [tasks, setTasks] = useState(initialTasks);
+
+  const onDragEnd = (result: DropResult) => {
+    const { source, destination } = result;
+
+    // Se o drop foi fora de uma área válida, não faz nada
+    if (!destination) return;
+
+    // Mesma coluna: reordenar
+    if (source.droppableId === destination.droppableId) {
+      const columnTasks = Array.from(
+        tasks[source.droppableId as keyof typeof tasks]
+      );
+      const [moved] = columnTasks.splice(source.index, 1);
+      columnTasks.splice(destination.index, 0, moved);
+
+      setTasks({
+        ...tasks,
+        [source.droppableId]: columnTasks,
+      });
+    } else {
+      // Mover entre colunas
+      const sourceTasks = Array.from(
+        tasks[source.droppableId as keyof typeof tasks]
+      );
+      const destTasks = Array.from(
+        tasks[destination.droppableId as keyof typeof tasks]
+      );
+      const [moved] = sourceTasks.splice(source.index, 1);
+      destTasks.splice(destination.index, 0, moved);
+
+      setTasks({
+        ...tasks,
+        [source.droppableId]: sourceTasks,
+        [destination.droppableId]: destTasks,
+      });
+    }
+  };
   return (
     <BoardContainer>
       <Typography
@@ -71,26 +116,38 @@ const BoardPage: React.FC = () => {
         sx={{ fontSize: "1rem", marginBottom: "2rem", textAlign: "center" }}>
         🎯 RETRO BOARD
       </Typography>
-      <ColumnsWrapper>
-        <Column>
-          <ColumnTitle>📝 TO DO</ColumnTitle>
-          {tasks.todo.map((task, i) => (
-            <TaskCard key={i}>{task}</TaskCard>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <ColumnsWrapper>
+          {Object.entries(tasks).map(([columnKey, taskList]) => (
+            <Droppable key={columnKey} droppableId={columnKey}>
+              {(provided) => (
+                <Column ref={provided.innerRef} {...provided.droppableProps}>
+                  <ColumnTitle>
+                    {columnKey === "todo"
+                      ? "📝 TO DO"
+                      : columnKey === "doing"
+                        ? "⏳ DOING"
+                        : "✅ DONE"}
+                  </ColumnTitle>
+                  {taskList.map((task, index) => (
+                    <Draggable key={task} draggableId={task} index={index}>
+                      {(provided) => (
+                        <TaskCard
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}>
+                          {task}
+                        </TaskCard>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </Column>
+              )}
+            </Droppable>
           ))}
-        </Column>
-        <Column>
-          <ColumnTitle>⏳ DOING</ColumnTitle>
-          {tasks.doing.map((task, i) => (
-            <TaskCard key={i}>{task}</TaskCard>
-          ))}
-        </Column>
-        <Column>
-          <ColumnTitle>✅ DONE</ColumnTitle>
-          {tasks.done.map((task, i) => (
-            <TaskCard key={i}>{task}</TaskCard>
-          ))}
-        </Column>
-      </ColumnsWrapper>
+        </ColumnsWrapper>
+      </DragDropContext>
     </BoardContainer>
   );
 };
