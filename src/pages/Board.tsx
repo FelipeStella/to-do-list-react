@@ -1,6 +1,13 @@
 // @page /
 import React, { useState } from "react";
-import { Box, Typography, Paper, Select, MenuItem } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Paper,
+  Select,
+  MenuItem,
+  IconButton,
+} from "@mui/material";
 import { styled } from "@mui/system";
 import {
   DragDropContext,
@@ -8,6 +15,7 @@ import {
   Draggable,
   DropResult,
 } from "@hello-pangea/dnd";
+import { DeleteOutline as DeleteIcon } from "@mui/icons-material";
 
 const BoardContainer = styled(Box)({
   fontFamily: "'Press Start 2P', cursive",
@@ -49,7 +57,10 @@ const ColumnTitle = styled(Typography)({
   marginBottom: "1rem",
 });
 
-const TaskCard = styled(Box)({
+const TaskCard = styled("div")({
+  position: "relative",
+  borderRadius: "8px",
+  background: "#fff",
   backgroundColor: "#222",
   border: "1px solid #00ffcc",
   color: "#00ffcc",
@@ -57,6 +68,15 @@ const TaskCard = styled(Box)({
   fontSize: "8px",
   marginBottom: "0.5rem",
   boxShadow: "0 0 5px #00ffcc",
+  "& .delete-icon": {
+    display: "none",
+    position: "absolute",
+    top: "0",
+    right: "0.5rem",
+  },
+  "&:hover .delete-icon": {
+    display: "block",
+  },
 });
 
 // Estado inicial das tarefas
@@ -109,6 +129,15 @@ const BoardPage: React.FC = () => {
     }
 
     updatedProjects[selectedIndex] = project;
+    setProjects(updatedProjects);
+  };
+
+  const deleteTask = (column: string, taskIndex: number) => {
+    const updatedProjects = [...projects];
+    const project = updatedProjects[selectedIndex];
+
+    project[column] = project[column].filter((_, index) => index !== taskIndex);
+
     setProjects(updatedProjects);
   };
 
@@ -168,6 +197,15 @@ const BoardPage: React.FC = () => {
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}>
                             {task}
+                            <IconButton
+                              className="delete-icon"
+                              onClick={() => deleteTask(columnKey, index)}
+                              sx={{
+                                color: "#ff0099",
+                                padding: 0,
+                              }}>
+                              <DeleteIcon sx={{ fontSize: "1.2rem" }} />
+                            </IconButton>
                           </TaskCard>
                         )}
                       </Draggable>
