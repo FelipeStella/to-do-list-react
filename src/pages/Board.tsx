@@ -1,6 +1,6 @@
 // @page /
 import React, { useState } from "react";
-import { Box, Typography, Paper } from "@mui/material";
+import { Box, Typography, Paper, Select, MenuItem } from "@mui/material";
 import { styled } from "@mui/system";
 import {
   DragDropContext,
@@ -60,65 +60,89 @@ const TaskCard = styled(Box)({
 });
 
 // Estado inicial das tarefas
-const initialTasks = {
-  todo: [
-    "Implementar autenticação",
-    "Criar layout do board",
-    "Conectar com API",
-  ],
-  doing: ["Estilizar colunas"],
-  done: ["Setup inicial do projeto", "Instalar dependências"],
-};
+const initialTasks = [
+  {
+    projectName: "Test",
+    todo: [
+      "Implementar autenticação",
+      "Criar layout do board",
+      "Conectar com API",
+    ],
+    doing: ["Estilizar colunas"],
+    done: ["Setup inicial do projeto", "Instalar dependências"],
+  },
+  {
+    projectName: "Novo Projeto",
+    todo: ["Analisar requisitos"],
+    doing: [],
+    done: ["Kickoff"],
+  },
+];
+
+type ColumnType = "todo" | "doing" | "done";
 
 const BoardPage: React.FC = () => {
-  const [tasks, setTasks] = useState(initialTasks);
+  const [projects, setProjects] = useState(initialTasks);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
-
-    // Se o drop foi fora de uma área válida, não faz nada
     if (!destination) return;
 
-    // Mesma coluna: reordenar
-    if (source.droppableId === destination.droppableId) {
-      const columnTasks = Array.from(
-        tasks[source.droppableId as keyof typeof tasks]
-      );
-      const [moved] = columnTasks.splice(source.index, 1);
-      columnTasks.splice(destination.index, 0, moved);
+    const updatedProjects = [...projects];
+    const project = { ...updatedProjects[selectedIndex] };
 
-      setTasks({
-        ...tasks,
-        [source.droppableId]: columnTasks,
-      });
+    const sourceCol = source.droppableId as ColumnType;
+    const destCol = destination.droppableId as ColumnType;
+
+    const sourceList = Array.from(project[sourceCol]);
+    const destList = Array.from(project[destCol]);
+    const [moved] = sourceList.splice(source.index, 1);
+
+    if (sourceCol === destCol) {
+      sourceList.splice(destination.index, 0, moved);
+      project[sourceCol] = sourceList;
     } else {
-      // Mover entre colunas
-      const sourceTasks = Array.from(
-        tasks[source.droppableId as keyof typeof tasks]
-      );
-      const destTasks = Array.from(
-        tasks[destination.droppableId as keyof typeof tasks]
-      );
-      const [moved] = sourceTasks.splice(source.index, 1);
-      destTasks.splice(destination.index, 0, moved);
-
-      setTasks({
-        ...tasks,
-        [source.droppableId]: sourceTasks,
-        [destination.droppableId]: destTasks,
-      });
+      destList.splice(destination.index, 0, moved);
+      project[sourceCol] = sourceList;
+      project[destCol] = destList;
     }
+
+    updatedProjects[selectedIndex] = project;
+    setProjects(updatedProjects);
   };
+
+  const currentProject = projects[selectedIndex];
+
   return (
     <BoardContainer>
+      <Select
+        value={selectedIndex}
+        onChange={(e) => setSelectedIndex(Number(e.target.value))}
+        sx={{
+          marginBottom: "2rem",
+          width: "15rem",
+          height: "2rem",
+          backgroundColor: "#ffffff",
+          fontFamily: "'Press Start 2P', cursive",
+          fontSize: "10px",
+        }}>
+        {projects.map((proj, idx) => (
+          <MenuItem key={idx} value={idx}>
+            {proj.projectName}
+          </MenuItem>
+        ))}
+      </Select>
+
       <Typography
         variant="h4"
-        sx={{ fontSize: "1rem", marginBottom: "2rem", textAlign: "center" }}>
+        sx={{ fontSize: "1rem", marginBottom: "1rem", textAlign: "center" }}>
         🎯 RETRO BOARD
       </Typography>
+
       <DragDropContext onDragEnd={onDragEnd}>
         <ColumnsWrapper>
-          {Object.entries(tasks).map(([columnKey, taskList]) => (
+          {["todo", "doing", "done"].map((columnKey) => (
             <Droppable key={columnKey} droppableId={columnKey}>
               {(provided) => (
                 <Column ref={provided.innerRef} {...provided.droppableProps}>
@@ -129,18 +153,25 @@ const BoardPage: React.FC = () => {
                         ? "⏳ DOING"
                         : "✅ DONE"}
                   </ColumnTitle>
-                  {taskList.map((task, index) => (
-                    <Draggable key={task} draggableId={task} index={index}>
-                      {(provided) => (
-                        <TaskCard
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}>
-                          {task}
-                        </TaskCard>
-                      )}
-                    </Draggable>
-                  ))}
+                  {Array.isArray(
+                    currentProject[columnKey as keyof typeof currentProject]
+                  ) &&
+                    (
+                      currentProject[
+                        columnKey as keyof typeof currentProject
+                      ] as string[]
+                    ).map((task, index) => (
+                      <Draggable key={task} draggableId={task} index={index}>
+                        {(provided) => (
+                          <TaskCard
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}>
+                            {task}
+                          </TaskCard>
+                        )}
+                      </Draggable>
+                    ))}
                   {provided.placeholder}
                 </Column>
               )}
