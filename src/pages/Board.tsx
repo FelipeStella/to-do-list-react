@@ -1,5 +1,5 @@
 // @page /
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -16,6 +16,7 @@ import {
   DropResult,
 } from "@hello-pangea/dnd";
 import { DeleteOutline as DeleteIcon } from "@mui/icons-material";
+import UIComponents from "src/ui-components";
 
 const BoardContainer = styled(Box)({
   fontFamily: "'Press Start 2P', cursive",
@@ -104,6 +105,15 @@ type ColumnType = "todo" | "doing" | "done";
 const BoardPage: React.FC = () => {
   const [projects, setProjects] = useState(initialTasks);
   const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const { setHandlerOnAddTask } = useContext(UIComponents.RetroHeaderContext);
+
+  useEffect(() => {
+    setHandlerOnAddTask(() => () => {
+      alert("Interceptado no Board:");
+      // lógica real aqui
+    });
+  }, [setHandlerOnAddTask]);
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;

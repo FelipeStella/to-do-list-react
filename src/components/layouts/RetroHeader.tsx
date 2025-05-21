@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/system";
 import { useNavigate } from "react-router-dom";
+import UIComponents from "src/ui-components";
 
 const clickSound = new Audio("/src/assets/sounds/click-8bit.wav");
 
@@ -56,6 +57,7 @@ const RetroButton = styled(Button)({
 
 const RetroHeader: React.FC = () => {
   const navigate = useNavigate();
+  const { handlerOnAddTask } = useContext(UIComponents.RetroHeaderContext);
 
   const playSound = () => {
     clickSound.currentTime = 0;
@@ -65,6 +67,12 @@ const RetroHeader: React.FC = () => {
   const handleButtonClick = (route: string) => {
     clickSound.play();
     navigate(route);
+  };
+
+  const onAddTask = () => {
+    clickSound.play();
+    if (handlerOnAddTask) handlerOnAddTask();
+    else console.log("Função de adicionar tarefa não definida");
   };
 
   return (
@@ -107,7 +115,7 @@ const RetroHeader: React.FC = () => {
             }}>
             Opções
           </Button>
-          <RetroButton onClick={playSound}>➕ Nova Tarefa</RetroButton>
+          <RetroButton onClick={onAddTask}>➕ Nova Tarefa</RetroButton>
         </Box>
         <Box display="flex" alignItems="center" gap={2}></Box>
       </Toolbar>
