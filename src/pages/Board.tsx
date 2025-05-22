@@ -1,5 +1,5 @@
 // @page /
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   Box,
   Typography,
@@ -17,6 +17,7 @@ import {
 } from "@hello-pangea/dnd";
 import { DeleteOutline as DeleteIcon } from "@mui/icons-material";
 import UIComponents from "src/ui-components";
+import { DrawerWrapperRef } from "src/components/ui/DrawerWrapper";
 
 const BoardContainer = styled(Box)({
   fontFamily: "'Press Start 2P', cursive",
@@ -108,10 +109,14 @@ const BoardPage: React.FC = () => {
 
   const { setHandlerOnAddTask } = useContext(UIComponents.RetroHeaderContext);
 
+  const drawerRef = useRef<DrawerWrapperRef>(null);
+
   useEffect(() => {
     setHandlerOnAddTask(() => () => {
-      alert("Interceptado no Board:");
-      // lógica real aqui
+      // const currentProject = projects[selectedIndex];
+      // currentProject.done.push();
+
+      drawerRef.current.openDrawer();
     });
   }, [setHandlerOnAddTask]);
 
@@ -227,6 +232,10 @@ const BoardPage: React.FC = () => {
           ))}
         </ColumnsWrapper>
       </DragDropContext>
+
+      <UIComponents.DrawerWrapper ref={drawerRef}>
+        <p>Teste</p>
+      </UIComponents.DrawerWrapper>
     </BoardContainer>
   );
 };

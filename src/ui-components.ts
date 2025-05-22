@@ -6,11 +6,13 @@
 import Layout from "./components/layouts/Layout";
 import RetroHeader from "./components/layouts/RetroHeader";
 import RetroHeaderContext from "./components/layouts/RetroHeaderContext";
+import DrawerWrapper from "./components/ui/DrawerWrapper";
 
 const UIComponents = {
   Layout,
   RetroHeader,
   RetroHeaderContext,
+  DrawerWrapper,
 };
 
 export default UIComponents;
