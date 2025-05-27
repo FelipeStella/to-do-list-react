@@ -3,16 +3,18 @@
  * Gera automaticamente todos os componentes de UI e Layouts.
  */
 
+import DrawerWrapper from "./components/ui/DrawerWrapper";
 import Layout from "./components/layouts/Layout";
 import RetroHeader from "./components/layouts/RetroHeader";
 import RetroHeaderContext from "./components/layouts/RetroHeaderContext";
-import DrawerWrapper from "./components/ui/DrawerWrapper";
+import Form from "./components/ui/form/Form";
 
 const UIComponents = {
+  DrawerWrapper,
   Layout,
   RetroHeader,
   RetroHeaderContext,
-  DrawerWrapper,
+  Form,
 };
 
 export default UIComponents;
