@@ -8,7 +8,7 @@ import React, {
   forwardRef,
 } from "react";
 import { Box, Typography, CircularProgress } from "@mui/material";
-import { ErrorsContext, LabelWidthContext } from "src/contexts/formContexts";
+import { ErrorsContext, LabelWidthContext } from "src/contexts/FormContexts";
 
 // Tipagem para erro
 type ErrorFormItem = {
