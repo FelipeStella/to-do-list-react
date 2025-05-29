@@ -7,6 +7,8 @@ import {
   Select,
   MenuItem,
   IconButton,
+  TextField,
+  Button,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import {
@@ -18,6 +20,7 @@ import {
 import { DeleteOutline as DeleteIcon } from "@mui/icons-material";
 import UIComponents from "src/ui-components";
 import { DrawerWrapperRef } from "src/components/ui/DrawerWrapper";
+import { FormHandle } from "src/components/ui/form/Form";
 
 const BoardContainer = styled(Box)({
   fontFamily: "'Press Start 2P', cursive",
@@ -106,8 +109,15 @@ type ColumnType = "todo" | "doing" | "done";
 const BoardPage: React.FC = () => {
   const [projects, setProjects] = useState(initialTasks);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const currentProject = projects[selectedIndex];
 
   const { setHandlerOnAddTask } = useContext(UIComponents.RetroHeaderContext);
+
+  const formRef = useRef<FormHandle>(null);
+
+  const model = {
+    taskName: "",
+  };
 
   const drawerRef = useRef<DrawerWrapperRef>(null);
 
@@ -156,7 +166,13 @@ const BoardPage: React.FC = () => {
     setProjects(updatedProjects);
   };
 
-  const currentProject = projects[selectedIndex];
+  const handleSubmit = async () => {
+    const errors = await formRef.current?.validate();
+    if (errors && errors.length === 0) {
+      alert("Formulário válido!");
+      // Aqui você pode continuar com o envio do formulário
+    }
+  };
 
   return (
     <BoardContainer>
@@ -234,7 +250,18 @@ const BoardPage: React.FC = () => {
       </DragDropContext>
 
       <UIComponents.DrawerWrapper ref={drawerRef}>
-        <p>Teste</p>
+        <UIComponents.Form
+          ref={formRef}
+          model={model}
+          labelWidth={6}
+          sx={{ backgroundColor: "#f9f9f9", padding: 2, borderRadius: 2 }}>
+          <UIComponents.FormItem label="Tarefa" field="taskName" required>
+            <TextField fullWidth size="small" name="taskName" />
+          </UIComponents.FormItem>
+          <Button onClick={handleSubmit} variant="contained">
+            Salvar
+          </Button>
+        </UIComponents.Form>
       </UIComponents.DrawerWrapper>
     </BoardContainer>
   );

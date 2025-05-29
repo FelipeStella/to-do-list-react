@@ -12,7 +12,7 @@ type FormItemProps = {
   children?: React.ReactNode;
 };
 
-export const FormItem: React.FC<FormItemProps> = ({
+const FormItem: React.FC<FormItemProps> = ({
   label,
   // eslint-disable-next-line no-unused-vars
   required = false,
@@ -64,3 +64,5 @@ export const FormItem: React.FC<FormItemProps> = ({
     </Box>
   );
 };
+
+export default FormItem;

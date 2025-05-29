@@ -7,7 +7,13 @@ import React, {
   useImperativeHandle,
   forwardRef,
 } from "react";
-import { Box, Typography, CircularProgress } from "@mui/material";
+import {
+  Box,
+  Typography,
+  CircularProgress,
+  SxProps,
+  Theme,
+} from "@mui/material";
 import { ErrorsContext, LabelWidthContext } from "src/contexts/FormContexts";
 
 // Tipagem para erro
@@ -21,6 +27,7 @@ type FormProps = {
   labelWidth?: number | string;
   loading?: boolean;
   children?: ReactNode;
+  sx?: SxProps<Theme>;
 };
 
 export interface FormHandle {
@@ -77,8 +84,8 @@ function validateListItem(
   });
 }
 
-export const Form = forwardRef<FormHandle, FormProps>(
-  ({ model, labelWidth, loading = false, children }, ref) => {
+const Form = forwardRef<FormHandle, FormProps>(
+  ({ model, labelWidth, loading = false, children, sx }, ref) => {
     const formRef = useRef<HTMLFormElement>(null);
     const [showErrors, setShowErrors] = useState(false);
     const [errors, setErrors] = useState<ErrorFormItem[]>([]);
@@ -168,11 +175,7 @@ export const Form = forwardRef<FormHandle, FormProps>(
     return (
       <ErrorsContext.Provider value={errors}>
         <LabelWidthContext.Provider value={labelWidth}>
-          <Box
-            component="form"
-            ref={formRef}
-            noValidate
-            sx={{ position: "relative" }}>
+          <Box component="form" ref={formRef} noValidate sx={sx}>
             {loading && (
               <Box
                 sx={{
@@ -210,3 +213,5 @@ export const Form = forwardRef<FormHandle, FormProps>(
 );
 
 Form.displayName = "Form";
+
+export default Form;
