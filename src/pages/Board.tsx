@@ -250,17 +250,30 @@ const BoardPage: React.FC = () => {
       </DragDropContext>
 
       <UIComponents.DrawerWrapper ref={drawerRef}>
+        <span>Nova tarefa</span>
         <UIComponents.Form
           ref={formRef}
           model={model}
           labelWidth={6}
-          sx={{ backgroundColor: "#f9f9f9", padding: 2, borderRadius: 2 }}>
-          <UIComponents.FormItem label="Tarefa" field="taskName" required>
+          sx={{
+            backgroundColor: "#ffffff",
+            padding: "2rem",
+            borderRadius: "8px",
+            border: "2px dashed #00ffcc",
+            boxShadow: "0 0 12px #00ffcc",
+            fontFamily: "'Press Start 2P', cursive",
+            fontSize: "0.7rem",
+            color: "#111111",
+            marginTop: "1rem",
+          }}>
+          <UIComponents.FormItem label="Nome" field="taskName" required>
             <TextField fullWidth size="small" name="taskName" />
           </UIComponents.FormItem>
-          <Button onClick={handleSubmit} variant="contained">
-            Salvar
-          </Button>
+          <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+            <Button onClick={handleSubmit} variant="contained">
+              Adicionar
+            </Button>
+          </Box>
         </UIComponents.Form>
       </UIComponents.DrawerWrapper>
     </BoardContainer>
